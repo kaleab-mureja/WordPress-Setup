@@ -1,0 +1,6 @@
+# Docker Volumes
+db_data/
+wordpress_data/
+
+# Environment Variables
+.env
