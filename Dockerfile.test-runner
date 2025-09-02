@@ -1,0 +1,14 @@
+# Start with the official WordPress CLI image with PHP 8.0
+FROM wordpress:cli-php8.0
+
+# Switch to the root user to install packages
+USER root
+
+# Install Python 3 and pip using the apk package manager
+RUN apk add --no-cache python3 py3-pip
+
+# Link python3 to python to support the "python" command
+RUN ln -s /usr/bin/python3 /usr/local/bin/python
+
+# (Optional) Switch back to the default user for security
+USER www-data

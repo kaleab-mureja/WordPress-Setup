@@ -2,10 +2,13 @@ version: '3.8'
 
 services:
   test_runner:
-    image: wordpress:cli
+    build:
+      context: .
+      dockerfile: Dockerfile.test-runner
     container_name: wp-cli-tester
     volumes:
       - ./wordpress_data:/var/www/html
+      - ./run_tests.py:/usr/local/bin/run_tests.py
     environment:
       WORDPRESS_DB_HOST: mysql:3306
       WORDPRESS_DB_USER: ${MYSQL_USER}
@@ -13,4 +16,14 @@ services:
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
     networks:
       - wordpress-network
-    command: /bin/bash -c "wp core install --url=http://localhost:8000 --title='My WordPress Site' --admin_user=admin --admin_password=password --admin_email=admin@example.com && wp core is-installed && echo 'WordPress is installed and accessible'"
+    command: python /usr/local/bin/run_tests.py
+
+  fastapi_tester:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi-tester
+    networks:
+      - wordpress-network
+    volumes:
+      - ./test_fastapi.py:/app/test_fastapi.py
